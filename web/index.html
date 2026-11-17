@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport-fit=cover: sisältö ulottuu iPhonen lovien/kulmien alle,
+       ja reunat hoidetaan CSS:n safe-area-arvoilla. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Painoseuranta</title>
+
+  <!-- PWA ja iOS-kotinäyttö -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#121212">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Painoseuranta">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="otsikko">
+    <h1>Painoseuranta</h1>
+    <p id="tanaan" class="himmea"></p>
+  </header>
+
+  <main>
+    <!-- Yhteenveto: kolme pientä lukua rinnakkain -->
+    <section class="yhteenveto" aria-label="Yhteenveto">
+      <div class="luku">
+        <span class="nimi">Viimeisin</span>
+        <span class="arvo" id="yv-viimeisin">–</span>
+      </div>
+      <div class="luku">
+        <span class="nimi">7 pv ka</span>
+        <span class="arvo" id="yv-keskiarvo">–</span>
+      </div>
+      <div class="luku">
+        <span class="nimi">Muutos alusta</span>
+        <span class="arvo" id="yv-muutos">–</span>
+      </div>
+    </section>
+
+    <!-- Syöttölomake -->
+    <section class="kortti" id="lomake-kortti">
+      <h2>Kirjaa päivä</h2>
+      <form id="lomake" novalidate>
+        <label class="kentta">
+          <span>Päivämäärä</span>
+          <input type="date" id="paiva" required>
+        </label>
+        <div class="rivi">
+          <label class="kentta">
+            <span>Paino (kg)</span>
+            <input type="text" id="paino" inputmode="decimal" placeholder="esim. 82,4" autocomplete="off">
+          </label>
+          <label class="kentta">
+            <span>Kalorit (kcal)</span>
+            <input type="text" id="kalorit" inputmode="numeric" placeholder="esim. 2300" autocomplete="off">
+          </label>
+        </div>
+        <button type="submit" class="nappi ensisijainen">Tallenna</button>
+        <p id="tila" class="tila" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="kortti">
+      <h2>Painon kehitys</h2>
+      <div class="kaavio"><canvas id="painokaavio"></canvas></div>
+      <p class="tyhja himmea" hidden>Ei vielä mittauksia.</p>
+    </section>
+
+    <section class="kortti">
+      <h2>Kalorit päivässä</h2>
+      <div class="kaavio"><canvas id="kalorikaavio"></canvas></div>
+      <p class="tyhja himmea" hidden>Ei vielä mittauksia.</p>
+    </section>
+
+    <section class="kortti">
+      <h2>Merkinnät</h2>
+      <p class="himmea pieni">Napauta merkintää muokataksesi sitä.</p>
+      <ul id="lista" class="lista"></ul>
+      <button type="button" id="nayta-kaikki" class="nappi toissijainen" hidden></button>
+    </section>
+
+    <section class="kortti">
+      <h2>Varmuuskopio</h2>
+      <p class="himmea pieni">Tiedot ovat vain tällä laitteella. Vie CSV-tiedosto säännöllisesti talteen.
+        Muoto on sama kuin painot.csv, joten tiedosto toimii myös paino.py:n kanssa.</p>
+      <div class="rivi">
+        <button type="button" id="vie" class="nappi toissijainen">Vie CSV</button>
+        <!-- Tiedostokenttä piilotetaan ja label toimii nappina -->
+        <label class="nappi toissijainen">
+          Tuo CSV
+          <input type="file" id="tuo" accept=".csv,text/csv,text/plain" hidden>
+        </label>
+      </div>
+      <p id="tila-varmuus" class="tila" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
